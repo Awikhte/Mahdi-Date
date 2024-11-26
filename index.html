@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ساعت و تاریخ رسمی ایران</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-jalaali/0.9.1/moment-jalaali.min.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      background-color: #f2e6d9;  /* رنگ زمینه گرم و ملایم */
+      color: #333;
+      padding: 20px;
+    }
+    .clock {
+      margin: 20px auto;
+      font-size: 1.5rem;  /* تغییر اندازه فونت ساعت */
+      font-weight: bold;
+      direction: ltr;
+      color: #6a4e23; /* رنگ متنی ملایم برای ساعت */
+    }
+    .date {
+      margin-top: 10px;
+      font-size: 1.5rem;
+      font-weight: normal;
+      direction: rtl;
+      color: #6a4e23; /* رنگ متنی ملایم برای تاریخ */
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 60%;
+      border-radius: 10px;  /* گرد کردن گوشه‌های جدول */
+      box-shadow: 0 0 10px 2px rgba(255, 215, 0, 0.5), 0 0 20px 5px rgba(0, 100, 0, 0.5); /* حاله نوری طلایی و سبز */
+      background-color: #f8f1e7; /* پس‌زمینه‌ی ملایم و گرم برای جدول */
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #e7d3b5; /* پس‌زمینه‌ی ملایم برای عنوان‌های جدول */
+      color: #6a4e23;  /* رنگ متن عنوان جدول */
+    }
+    td {
+      background-color: #f2e6d9; /* پس‌زمینه‌ی سلول‌ها */
+      color: #6a4e23;  /* رنگ متن برای داده‌ها */
+    }
+    .highlight {
+      background-color: #a0d8f1; /* آبی کمرنگ */
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>ساعت و تاریخ رسمی ایران</h1>
+  <div class="clock" id="iranClock"></div>
+  <div class="date" id="iranDate"></div>
+  
+  <h2>تقویم امروز</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>روز</th>
+        <th>ماه</th>
+        <th>سال</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>۶</td>
+        <td>آذر</td>
+        <td>۱۴۰۳</td>
+      </tr>
+      <tr>
+        <!-- اضافه کردن روز هفته به جدول -->
+        <td colspan="3" id="weekdayRow">سه‌شنبه</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    // به‌روزرسانی ساعت ایران
+    function updateIranClock() {
+      const now = new Date();
+      const utcHours = now.getUTCHours();
+      const utcMinutes = now.getUTCMinutes();
+      const utcSeconds = now.getUTCSeconds();
+
+      // افزودن اختلاف زمانی ایران (UTC+3:30)
+      let iranHours = utcHours + 3;
+      let iranMinutes = utcMinutes + 30;
+      let iranSeconds = utcSeconds;
+
+      // اصلاح دقیقه و ساعت در صورت عبور از 60 دقیقه
+      if (iranMinutes >= 60) {
+        iranMinutes -= 60;
+        iranHours += 1;
+      }
+
+      // اصلاح ساعت در صورت عبور از 24
+      if (iranHours >= 24) {
+        iranHours -= 24;
+      }
+
+      // قالب‌بندی ساعت، دقیقه و ثانیه
+      const formattedHours = iranHours.toString().padStart(2, '0');
+      const formattedMinutes = iranMinutes.toString().padStart(2, '0');
+      const formattedSeconds = iranSeconds.toString().padStart(2, '0');
+      const iranTime = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+
+      document.getElementById('iranClock').textContent = `ساعت ایران: ${iranTime}`;
+    }
+
+    // نمایش تاریخ شمسی با moment-jalaali
+    function updateIranDate() {
+      const persianDate = moment().format('jYYYY/jMM/jDD'); // تاریخ شمسی با moment-jalaali
+      document.getElementById('iranDate').textContent = `تاریخ امروز: ${persianDate}`;
+    }
+
+    // نمایش روز هفته داخل جدول
+    function updateWeekday() {
+      const persianWeekday = moment().format('jdddd'); // روز هفته به صورت فارسی
+      document.getElementById('weekdayRow').textContent = persianWeekday;
+    }
+
+    // نمایش تاریخ، ساعت و روز هفته
+    function updateIranDateAndClock() {
+      updateIranDate(); // تاریخ را به روز می‌کند
+      updateIranClock(); // ساعت را به روز می‌کند
+      updateWeekday();  // روز هفته را به روز می‌کند
+    }
+
+    // به‌روزرسانی ساعت هر ثانیه
+    setInterval(updateIranClock, 1000);
+    updateIranDateAndClock(); // تاریخ، ساعت و روز هفته را یکبار به روز می‌کند
+  </script>
+</body>
+</html>
